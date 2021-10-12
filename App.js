@@ -7,7 +7,9 @@ import {
   TextInput,
   Button,
   ImageBackground,
-  Alert,
+  ToastAndroid,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import Header from "./components/header";
 import TodoItem from "./components/TodoItem";
@@ -27,7 +29,16 @@ export default function TODOLIST() {
   };
 
   const submitHandler = (text) => {
-    if (Text.length > 0) {
+    console.log(text.length);
+    let found = false;
+    for (let i = 0; i < Todo.length; i++) {
+      if (Todo[i].text === text) {
+        found = true;
+        break;
+      }
+    }
+
+    if (text.length > 0) {
       setTodo((prevTodo) => {
         return [
           { text: text, key: Math.random().toString(), verified: false },
@@ -35,11 +46,13 @@ export default function TODOLIST() {
         ];
       });
     } else {
-      Alert.alert("You havent written anything yet ! ", [
-        { Text: "OK", onPress: () => console.log("alert closed") },
-      ]);
+      ToastAndroid.show(
+        "You havent written anything yet !",
+        ToastAndroid.SHORT
+      );
     }
   };
+
   const Linee = (key) => {
     let tmp = Todo;
     tmp = tmp.map((item) => {
@@ -49,27 +62,38 @@ export default function TODOLIST() {
   };
   console.log(Todo);
   return (
-    <ImageBackground
-      source={require("./assets/Imageee.jpg")}
-      style={{
-        resizeMode: "cover",
-        flex: 1,
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        console.log("dissmissed Keyboard");
       }}
     >
-      <Header />
+      <ImageBackground
+        source={require("./assets/Imageee.jpg")}
+        style={{
+          resizeMode: "cover",
+          flex: 1,
+        }}
+      >
+        <Header />
 
-      <View style={styles.container}>
-        <AddTodo submitHandler={submitHandler} />
-        <View style={styles.list}>
-          <FlatList
-            data={Todo}
-            renderItem={({ item }) => (
-              <TodoItem item={item} pressHandler={pressHandler} Linee={Linee} />
-            )}
-          />
+        <View style={styles.container}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              data={Todo}
+              renderItem={({ item }) => (
+                <TodoItem
+                  item={item}
+                  pressHandler={pressHandler}
+                  Linee={Linee}
+                />
+              )}
+            />
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 }
 

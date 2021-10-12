@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Button,
+  Keyboard,
+} from "react-native";
 
 export default function AddTodo({ submitHandler }) {
   const [text, setText] = useState("");
@@ -20,6 +27,7 @@ export default function AddTodo({ submitHandler }) {
 
       <Button
         onPress={() => {
+          Keyboard.dismiss();
           submitHandler(text);
           setText("");
         }}
